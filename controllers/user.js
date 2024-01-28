@@ -29,6 +29,26 @@ const createUser = async (req, res) => {
   }
 };
 
+const updateUser = async (req, res) => {
+  try {
+    const { name, email } = req.body;
+    const updateUser = await User.findByIdAndUpdate(
+      req.params.id,
+      { name, email },
+      {
+        new: true,
+      }
+    );
+    res.status(200).json({
+      success: true,
+      message: "User updated successfully",
+      data: updateUser,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const deleteUser = async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(req.params.id);
@@ -45,4 +65,5 @@ module.exports = {
   getUser,
   createUser,
   deleteUser,
+  updateUser,
 };
