@@ -9,7 +9,7 @@ const orderItemSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
-  product: [
+  products: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Product",
@@ -17,6 +17,6 @@ const orderItemSchema = new mongoose.Schema({
   ],
 });
 
-const CartItem = mongoose.model("CartItem", orderItemSchema);
+const Order = mongoose.model("CartItem", orderItemSchema);
 
-module.exports = CartItem;
+module.exports = Order;

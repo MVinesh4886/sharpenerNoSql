@@ -33,7 +33,7 @@ const getProduct = async (req, res) => {
     const product = await Product.find();
     res.status(200).json({
       success: true,
-      message: "Product created successfully",
+      message: "Product fetched successfully",
       data: product,
     });
   } catch (error) {
