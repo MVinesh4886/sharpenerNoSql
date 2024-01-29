@@ -1,4 +1,5 @@
 const Product = require("../models/product");
+const User = require("../models/user");
 
 const createProduct = async (req, res) => {
   try {
@@ -9,7 +10,13 @@ const createProduct = async (req, res) => {
       price,
       imageUrl,
       description,
+      user: req.user,
     });
+
+    const user = await User.findById(req.user);
+    user.products.push(product._id);
+
+    await user.save();
 
     res.status(200).json({
       success: true,

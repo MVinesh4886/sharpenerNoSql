@@ -10,7 +10,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  Product: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+  password: {
+    type: String,
+    required: true,
+  },
+  products: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
 });
 
 //compile the schema to form a model
