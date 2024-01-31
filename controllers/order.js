@@ -117,7 +117,6 @@ const deleteOrder = async (req, res) => {
         .json({ message: "Product not found in the Orders" });
     }
 
-    // Remove the product from the cart
     order.products.splice(productIndex, 1);
     await order.save();
 

@@ -44,7 +44,7 @@ const getProduct = async (req, res) => {
 const getUserProduct = async (req, res) => {
   try {
     const user = await User.findById(req.user);
-    const products = await Product.find({ user: user._id }); // Retrieve products associated with the user
+    const products = await Product.find({ user: user._id });
     res.status(200).json({
       success: true,
       message: "Products fetched successfully",
