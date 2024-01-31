@@ -1,50 +1,6 @@
 const Order = require("../models/order");
 const Product = require("../models/product");
 
-// const createOrder = async (req, res) => {
-//   try {
-//     const product = await Product.findById(req.params.id);
-//     if (!product) {
-//       return res.json({ message: "Product not found" });
-//     }
-
-//     const order = await Order.findOne({ user: req.user });
-//     if (!order) {
-//       const newOrder = await Order.create({
-//         quantity: req.body.quantity,
-//         user: req.user,
-//         products: [product],
-//       });
-//       await newOrder.save();
-//       return res.json({
-//         message: "Order created successfully",
-//         data: newOrder,
-//       });
-//     } else {
-//       // Check if the product is already in the order
-//       const existingProduct = order.products.find(
-//         (p) => p.toString() === product._id.toString()
-//       );
-
-//       if (existingProduct) {
-//         // If the product is already in the order, update the quantity
-//         existingProduct.quantity += req.body.quantity;
-//       } else {
-//         order.products.push(product);
-//       }
-//       // order.products.push(product);
-//       await order.save();
-//       return res.json({
-//         message: "product added to order successfully",
-//         data: order,
-//       });
-//     }
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(500).json({ message: "Internal server error" });
-//   }
-// };
-
 const createOrder = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
