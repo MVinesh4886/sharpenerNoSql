@@ -1,0 +1,30 @@
+/* Style for the navigation bar */
+nav ul {
+  /* list-style-type: none; */
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: space-around;
+  background-color: #f2f2f2;
+}
+
+nav ul li {
+  display: block;
+}
+
+nav ul li a {
+  display: block;
+  padding: 10px;
+  text-decoration: none;
+  color: #333;
+  cursor: pointer;
+}
+
+/* Style for the product div */
+/* #product {
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	padding: 20px;
+	margin-top: 20px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  } */

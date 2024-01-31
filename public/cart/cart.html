@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cart</title>
+  </head>
+  <link rel="stylesheet" href="./cart.css" />
+  <body>
+    <nav>
+      <ul>
+        <li><a href="./../shop/shop.html">Shop </a></li>
+
+        <li><a href="./../cart/cart.html" onclick="getProducts()">Cart</a></li>
+        <li><a href="./../order/order.html">Orders</a></li>
+        <li><a href="./../product/product.html"> AddProduct </a></li>
+        <li><a href="./../index/index.html">AdminProducts </a></li>
+        <li><a onclick="logout()" id="logout">Logout</a></li>
+      </ul>
+    </nav>
+    <div id="product-list"></div>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        getProducts();
+      });
+      // let productDiv;
+      const getProducts = async () => {
+        try {
+          const token = JSON.parse(localStorage.getItem("userDetails"));
+
+          const response = await axios.get(`http://localhost:3000/cart/get`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          console.log(response);
+          console.log(response.data.CartItems);
+          // const id = response.data.data[0]._id;
+          // console.log(id);
+          const products = response.data.CartItems;
+          displayProductList(products);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+
+      const displayProductList = (cartItems) => {
+        const productListContainer = document.getElementById("product-list");
+        productListContainer.innerHTML = ""; // Clear previous content
+
+        const products = cartItems.products; // Access the products array within CartItems
+
+        products.forEach((product) => {
+          const productDiv = document.createElement("div");
+          productDiv.classList.add("product-item");
+
+          const title = document.createElement("h2");
+          title.textContent = product.title;
+
+          const price = document.createElement("p");
+          price.textContent = `Price: $${product.price}`;
+
+          const image = document.createElement("img");
+          image.src = product.imageUrl;
+          image.alt = "Product Image";
+
+          const description = document.createElement("p");
+          description.textContent = product.description;
+
+          const deleteButton = document.createElement("button");
+          deleteButton.textContent = "Delete";
+          deleteButton.onclick = async () => {
+            const productId = product._id; // Get the product ID
+            await deleteFromCart(productId);
+          };
+
+          const details = document.createElement("button");
+          details.textContent = "Details";
+          details.onclick = () => {
+            productDiv.appendChild(description);
+            productDiv.removeChild(details);
+          };
+
+          const orderButton = document.createElement("button");
+          orderButton.textContent = "Order";
+          orderButton.onclick = async () => {
+            const productId = product._id; // Get the product ID
+            await orderFromCart(productId);
+          };
+
+          const quantityInput = document.createElement("input");
+          quantityInput.id = "quantity";
+          quantityInput.type = "number";
+          quantityInput.min = "1";
+          quantityInput.value = "1";
+
+          productDiv.appendChild(title);
+          productDiv.appendChild(price);
+          productDiv.appendChild(details);
+          productDiv.appendChild(deleteButton);
+          productDiv.appendChild(quantityInput);
+          productDiv.appendChild(orderButton);
+          productDiv.appendChild(image);
+
+          productListContainer.appendChild(productDiv);
+        });
+      };
+
+      const deleteFromCart = async (productId) => {
+        try {
+          const token = JSON.parse(localStorage.getItem("userDetails"));
+          const response = await axios.delete(
+            `http://localhost:3000/cart/delete/${productId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          console.log(response);
+
+          // alert("Product is either ordered or removed from cart successfully!");
+          // Reload the products after successful deletion
+          getProducts();
+        } catch (error) {
+          console.log(error);
+          alert("Failed to delete product from cart. Please try again.");
+        }
+      };
+
+      const orderFromCart = async (productId) => {
+        try {
+          const token = JSON.parse(localStorage.getItem("userDetails"));
+
+          const quantityInput = document.getElementById("quantity").value;
+
+          const quantity = parseInt(quantityInput, 10);
+
+          const response = await axios.post(
+            `http://localhost:3000/order/create/${productId}`,
+            { quantity },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          console.log(response);
+          console.log(response.status);
+          // alert("Product ordered successfully!");
+          if (response.status === 200) {
+            // If the order is successfully placed, delete the product from the cart
+            // productDiv.remove();
+            alert("Product ordered successfully!");
+            await deleteFromCart(productId);
+            document.querySelector(".quantity").value = "";
+          }
+        } catch (error) {
+          console.log(error);
+          // alert("Failed to order product. Please try again.");
+        }
+      };
+
+      const logout = function () {
+        const logoutUser = document.getElementById("logout");
+        localStorage.clear();
+        window.location.href = "./../login/login.html";
+      };
+    </script>
+  </body>
+</html>

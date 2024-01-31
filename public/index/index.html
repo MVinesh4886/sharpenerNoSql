@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>shoppingCart</title>
+  </head>
+
+  <link rel="stylesheet" href="./index.css" />
+  <body>
+    <nav>
+      <ul>
+        <li><a href="./../shop/shop.html">Shop </a></li>
+
+        <li><a href="./../cart/cart.html">Cart</a></li>
+        <li><a href="./../order/order.html">Orders</a></li>
+        <li><a href="./../product/product.html"> AddProduct </a></li>
+        <li>
+          <a href="./../index/index.html" onclick="getAllProducts()"
+            >AdminProducts
+          </a>
+        </li>
+        <li><a onclick="logout()" id="logout">Logout</a></li>
+      </ul>
+    </nav>
+    <div id="product-list"></div>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        getAllProducts();
+      });
+
+      const getAllProducts = async () => {
+        try {
+          const token = JSON.parse(localStorage.getItem("userDetails"));
+          const response = await axios.get(
+            `http://localhost:3000/product/getUserProduct`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          console.log(response);
+          console.log(response.data.data);
+          // const id = response.data.data[0]._id;
+          // console.log(id);
+          const products = response.data.data;
+          displayProductList(products);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+
+      const displayProductList = (products) => {
+        const productListContainer = document.getElementById("product-list");
+        productListContainer.innerHTML = ""; // Clear previous content
+
+        products.forEach((product) => {
+          const productDiv = document.createElement("div");
+          productDiv.classList.add("product-item");
+
+          const title = document.createElement("h2");
+          title.textContent = product.title;
+
+          const price = document.createElement("p");
+          price.textContent = `Price: $${product.price}`;
+
+          const image = document.createElement("img");
+          image.src = product.imageUrl;
+          image.alt = "Product Image";
+
+          const deleteButton = document.createElement("button");
+          deleteButton.textContent = "Delete";
+          deleteButton.onclick = async () => {
+            const productId = product._id; // Get the product ID
+            // const cartId = cartItems._id; // Get the cart ID
+            // console.log(cartId);
+            await deleteFromAdminProducts(productId);
+          };
+
+          const details = document.createElement("button");
+          details.textContent = "Details";
+          details.onclick = () => {
+            const description = document.createElement("p");
+            description.textContent = product.description;
+            productDiv.appendChild(description);
+            productDiv.removeChild(details);
+          };
+
+          productDiv.appendChild(title);
+          productDiv.appendChild(price);
+          productDiv.appendChild(details);
+          productDiv.appendChild(deleteButton);
+          productDiv.appendChild(image);
+
+          productListContainer.appendChild(productDiv);
+        });
+      };
+      const deleteFromAdminProducts = async (productId) => {
+        try {
+          const token = JSON.parse(localStorage.getItem("userDetails"));
+          const response = await axios.delete(
+            `http://localhost:3000/product/delete/${productId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          console.log(response);
+          alert("Product deleted from AdminProducts successfully!");
+          // Reload the products after successful deletion
+          getAllProducts();
+        } catch (error) {
+          console.log(error);
+          alert(
+            "Failed to delete product from Admin Products. Please try again."
+          );
+        }
+      };
+
+      const logout = function () {
+        const logoutUser = document.getElementById("logout");
+        localStorage.clear();
+        window.location.href = "./../login/login.html";
+      };
+    </script>
+  </body>
+</html>

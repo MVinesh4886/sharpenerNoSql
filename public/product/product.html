@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product</title>
+  </head>
+  <link rel="stylesheet" href="./product.css" />
+  <body>
+    <nav>
+      <ul>
+        <li><a href="./../shop/shop.html">Shop </a></li>
+        <li><a href="./../cart/cart.html">Cart</a></li>
+        <li><a href="./../order/order.html">Orders</a></li>
+        <li><a href="./../product/product.html"> AddProduct </a></li>
+        <li><a href="./../index/index.html">AdminProducts </a></li>
+        <li><a onclick="logout()" id="logout">Logout</a></li>
+      </ul>
+    </nav>
+    <div id="product">
+      <label>Title</label>
+      <input type="text" id="title" placeholder="enter title" />
+
+      <label>Price</label>
+      <input type="number" id="price" placeholder="enter price" />
+
+      <label>ImageUrl</label>
+      <input type="text" id="imageUrl" placeholder="enter image url" />
+
+      <label>Description</label>
+      <textarea id="description" placeholder="Enter description"></textarea>
+      <button type="button" id="submit">Add Product</button>
+    </div>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="./product.js"></script>
+  </body>
+</html>
