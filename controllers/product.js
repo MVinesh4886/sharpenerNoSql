@@ -41,6 +41,21 @@ const getProduct = async (req, res) => {
   }
 };
 
+const getUserProduct = async (req, res) => {
+  try {
+    const user = await User.findById(req.user);
+    const products = await Product.find({ user: user._id }); // Retrieve products associated with the user
+    res.status(200).json({
+      success: true,
+      message: "Products fetched successfully",
+      data: products,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 const deleteProduct = async (req, res) => {
   try {
     await Product.findByIdAndDelete(req.params.id);
@@ -52,6 +67,19 @@ const deleteProduct = async (req, res) => {
     console.log(error);
   }
 };
+
+//*To delete all products
+// const deleteProduct = async (req, res) => {
+//   try {
+//     await Product.deleteMany();
+//     res.status(200).json({
+//       success: true,
+//       message: "Product deleted successfully",
+//     });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 
 const updateProduct = async (req, res) => {
   try {
@@ -74,6 +102,7 @@ const updateProduct = async (req, res) => {
 module.exports = {
   createProduct,
   getProduct,
+  getUserProduct,
   deleteProduct,
   updateProduct,
 };
